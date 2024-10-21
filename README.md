@@ -34,7 +34,7 @@ The backbone of our study lies in answering the following SMART questions:
 4. **Are there discernible trends in fatal accidents across different years? Has there been an increase or decrease in fatalities in certain regions?**
 5. **How does EMS arrival time influence the outcome of fatal crashes, and are quicker response times linked to lower fatality rates?**
 
-Our ultimate goal is to propose data-backed recommendations to policymakers, city planners, and road safety organizations to drive impactful changes.
+This analysis will be helpful for policymakers, city planners, and road safety organizations to drive impactful changes.
 
 ---
 
