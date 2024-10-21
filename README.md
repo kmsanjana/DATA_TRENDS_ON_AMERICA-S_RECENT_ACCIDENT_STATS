@@ -45,3 +45,7 @@ To carry out our analysis, we are leveraging the following tools and technologie
 - **Data Source**: [FARS 2022 Dataset](https://geodata.bts.gov/datasets/usdot::fatality-analysis-reporting-system-fars-2022-accidents/about)
 - **Programming Languages**: R
 
+## 👥 Meet the Team
+This project is a collaborative effort by a talented team of data enthusiasts. Meet the minds behind the research:
+
+- Aditya Kanbargi | Annie Cheng | Jahnavi V | Sanjana K M
