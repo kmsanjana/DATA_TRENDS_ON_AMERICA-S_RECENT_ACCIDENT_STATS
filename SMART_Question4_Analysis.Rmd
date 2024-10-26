@@ -1,0 +1,139 @@
+"---
+title: "Analysis of Trends in Fatal Accidents"
+Team: "5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)  
+library(lubridate) 
+library(ggplot2)  
+```
+
+## 1. Introduction (SMART Questionb 4)
+This analysis addresses one critical SMART question:
+4. Are there noticeable trends in fatal accidents throughout the year 2022, and how do they differ across regions?
+
+We will be using the 2022 Fatality Analysis Reporting System (FARS) dataset to explore this question, focusing on trends.
+
+## 2. Data Loading and Preparation
+
+```{r data-loading}
+# Load the dataset
+fars_data <- read.csv("NTAD_Fatality_Analysis_Reporting_System_2022_Accidents_3270373163975898856.csv")
+
+# Overview of dataset
+glimpse(fars_data)
+summary(fars_data)
+```
+
+### Data Preparation
+- **Year Extraction**: If the dataset contains a 'Date' or 'Year' column, ensure proper formatting.
+- **Filtering Relevant Columns**: Focus on columns relevant to year, region, EMS response time, and fatality status.
+
+```{r data-preparation}
+# Convert DATE column to Date type and extract month information
+if ("DATE" %in% names(fars_data)) {
+  fars_data$DATE <- as.Date(fars_data$DATE, format="%Y-%m-%d")
+  fars_data$MONTH <- month(fars_data$DATE, label = TRUE)
+}
+
+# Overview of the dataset
+glimpse(fars_data)
+summary(fars_data)
+```
+
+## 3. Monthly trends for 2022
+
+
+# Analyzing fatalities by month to identify seasonal patterns
+```{r}
+monthly_summary <- fars_data %>% 
+  group_by(MONTH) %>% 
+  summarize(total_fatalities = n(), .groups = 'drop')
+
+# Plotting fatalities by month with numerical x-axis
+ggplot(monthly_summary, aes(x=MONTH, y=total_fatalities)) +
+  geom_line(group=1, color="blue", size=1.2) +
+  geom_point(color="red", size=3) +
+  scale_x_continuous(breaks=1:12) +  # Set x-axis to display numerical months 1 to 12
+  labs(title="Trends in Fatal Accidents by Month (2022)",
+       x="Month",
+       y="Total Fatalities") +
+  theme_minimal()
+```
+
+### Regional Analysis for the year 2022
+
+```{r}
+state_monthly_summary <- fars_data %>% 
+  group_by(STATENAME, MONTH) %>% 
+  summarize(total_fatalities = n(), .groups = 'drop')
+
+print(head(state_monthly_summary))
+
+ggplot(state_monthly_summary, aes(x=MONTH, y=total_fatalities, color=STATENAME, group=STATENAME)) +
+  geom_line(size=1) +
+  geom_point(size=2) +
+  scale_x_continuous(breaks=1:12) + 
+  labs(title="State-wise Trends in Fatal Accidents by Month",
+       x="Month",
+       y="Total Fatalities",
+       color="State") +
+  theme_minimal()
+```
+
+## 4. Insights and Recommendation
+
+
+# Summarize the monthly and regional trends
+```{r}
+peak_month <- monthly_summary$MONTH[which.max(monthly_summary$total_fatalities)]
+
+cat("Summary of Findings:\n")
+cat("- The month with the highest number of fatal accidents in 2022 was", peak_month, ".\n")
+
+```
+
+# Identify the region with the highest fatalities in each month
+
+```{r}
+regional_monthly_summary <- fars_data %>% 
+  group_by(STATENAME, MONTH) %>% 
+  summarize(total_fatalities = n(), .groups = 'drop')
+
+high_risk_states <- regional_monthly_summary %>% 
+  group_by(MONTH) %>% 
+  slice(which.max(total_fatalities)) %>% 
+  select(MONTH, STATENAME, total_fatalities)
+
+cat("States with the highest number of fatalities for each month:\n")
+print(high_risk_states)
+```
+
+
+# Generate recommendations based on observed trends
+```{r}
+cat("Recommendations:\n")
+cat("- The seasonal trends says that specific months require targeted safety campaigns to reduce accidents.\n")
+cat("- Regional differences suggest that safety measures should be adapted to local needs, focusing on regions with higher risks.\n")
+```
+
+#Conclusion for the following question
+
+#Checking if the no.of fatalities have been decreasing or increasing over the months in different regions
+
+```{r}
+# Conclusion Summary
+regional_trends <- fars_data %>% 
+  group_by(STATENAME, MONTH) %>% 
+  summarize(total_fatalities = n(), .groups = 'drop')
+
+trend_direction <- regional_trends %>%
+  group_by(STATENAME) %>%
+  summarize(trend = cor(MONTH, total_fatalities, use="complete.obs")) %>%
+  mutate(direction = ifelse(trend > 0, "Increasing", "Decreasing"))
+
+cat("Trend Analysis Summary for Fatalities in 2022:\n")
+print(trend_direction)
+```
