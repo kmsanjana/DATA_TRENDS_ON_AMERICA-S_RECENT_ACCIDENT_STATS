@@ -26,6 +26,17 @@ glimpse(fars_data)
 summary(fars_data)
 ```
 
+
+### Dataset Overview
+```{r}
+cat("Dataset Overview:\n")
+cat("- Number of records:", nrow(fars_data), "\n")
+cat("- Number of variables:", ncol(fars_data), "\n")
+cat("- Key Variables:\n")
+print(names(fars_data))
+```
+
+
 ### Data Preparation
 - **Year Extraction**: If the dataset contains a 'Date' or 'Year' column, ensure proper formatting.
 - **Filtering Relevant Columns**: Focus on columns relevant to year, region, and fatality status.
@@ -39,6 +50,69 @@ if ("DATE" %in% names(fars_data)) {
 glimpse(fars_data)
 summary(fars_data)
 ```
+
+## Graphical Representations
+
+```{r graphical-representations}
+fars_data$total_fatalities <- ifelse(fars_data$FATALS > 0, 1, 0)
+
+# Histogram of Total Fatalities
+ggplot(fars_data, aes(x=total_fatalities)) +
+    geom_histogram(binwidth=1, fill="blue", color="black", alpha=0.7) +
+    labs(title="Histogram of Total Fatalities", x="Total Fatalities", y="Frequency") +
+    theme_minimal()
+
+# Boxplot of Fatalities by Month
+ggplot(fars_data, aes(x=MONTH, y=total_fatalities)) +
+    geom_boxplot(fill="lightgreen") +
+    labs(title="Boxplot of Fatalities by Month", x="Month", y="Total Fatalities") +
+    theme_minimal()
+```
+
+
+## Normality Tests
+
+```{r normality-tests}
+# Check the structure of the dataset
+str(fars_data)
+
+# Create total_fatalities based on the FATALS column
+fars_data$total_fatalities <- fars_data$FATALS
+
+# Check the number of non-missing values
+non_missing_count <- sum(!is.na(fars_data$total_fatalities))
+cat("Number of non-missing values in total_fatalities:", non_missing_count, "\\n")
+
+# Display unique values and summary of total_fatalities
+unique_values <- unique(fars_data$total_fatalities)
+summary(fars_data$total_fatalities)
+cat("Unique values in total_fatalities:", unique_values, "\\n")
+
+# Run Shapiro-Wilk Normality Test
+if (non_missing_count >= 3 && non_missing_count <= 5000) {
+    shapiro_test <- shapiro.test(fars_data$total_fatalities)
+    cat("Shapiro-Wilk Normality Test:\\n")
+    print(shapiro_test)
+} else {
+    cat("Insufficient sample size for Shapiro-Wilk test.\\n")
+}
+
+# Q-Q Plot for Normality Check
+qqnorm(fars_data$total_fatalities, main="Q-Q Plot for Total Fatalities")
+qqline(fars_data$total_fatalities, col="red")
+```
+
+## Statistical Test
+
+### Chi-Square Test
+```{r chi-square-test}
+# Chi-Square Test
+table_states <- table(fars_data$STATENAME)
+chi_square_test <- chisq.test(table_states)
+cat("Chi-Square Test Results:\n")
+print(chi_square_test)
+```
+
 
 ## 3. Monthly trends for 2022
 
