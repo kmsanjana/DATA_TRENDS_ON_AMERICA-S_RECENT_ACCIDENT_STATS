@@ -10,19 +10,23 @@ library(tidyverse)
 library(dplyr)
 library(car)
 library(PMCMRplus)
+library(here)
 ```
 
 ```{r}
-dataset <- read_csv("/Users/chengyuhan/Documents/GitHub/DATS_6101_TEAM5/dataset/cleaned_FARS.csv")
+# load the cleaned data frame
+dataset <- read_csv(here("dataset", "cleaned_FARS.csv"))
 colnames(dataset)
 ```
 
 
-
 # 2. Temporal Analysis (Hour, Day of Week)
+
 Research Question: How do **temporal factors** affect fatal motor vehicle accidents?
-SMART question 1: How do **day of week** and **hour of day** affect the occurrence and severity of fatal accidents?
-SMART question 2: Does **day of week** affect the day to day variation on total fatalities per day?
+
+- SMART question 1: How do **day of week** and **hour of day** affect the occurrence and severity of fatal accidents?
+
+- SMART question 2: Does **day of week** affect the day to day variation on total fatalities per day?
 
 ## Data Subsetting and Preparation
 Subset for temporal question
@@ -43,7 +47,7 @@ df_temporal <- df_temporal %>%
    fatal_category = ifelse(fatals > 1, "multiple", "one")) 
 
 
-# convert into factor variable and set up levl
+# convert into factor variable and set up level
 df_temporal$day_weekname <- factor(df_temporal$day_weekname, levels = c("Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 df_temporal$hour <- factor(df_temporal$hour)
 
