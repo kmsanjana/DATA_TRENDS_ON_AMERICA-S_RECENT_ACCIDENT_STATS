@@ -12,7 +12,7 @@ library(ggplot2)
 
 ## 1. Introduction (SMART Question 4)
 This analysis addresses one critical SMART question:
-4. Are there noticeable trends in fatal accidents throughout the year 2022, and how do they differ across regions?
+4. Are there noticeable trends in fatal accidents throughout the year 2022, and has the number of fatalities been increasing or decreasing in certain regions?
 
 We will be using the 2022 Fatality Analysis Reporting System (FARS) dataset to explore this question, focusing on trends.
 
