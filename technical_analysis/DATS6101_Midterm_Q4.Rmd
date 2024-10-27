@@ -20,7 +20,7 @@ We will be using the 2022 Fatality Analysis Reporting System (FARS) dataset to e
 
 ```{r data-loading}
 # Load the dataset
-fars_data <- read.csv("NTAD_Fatality_Analysis_Reporting_System_2022_Accidents_3270373163975898856.csv")
+fars_data <- read_csv("/Users/jahnaviv/Documents/GitHub/DATS_6101_TEAM5/dataset/cleaned_FARS.csv")
 
 glimpse(fars_data)
 summary(fars_data)
@@ -54,41 +54,36 @@ summary(fars_data)
 ## Graphical Representations
 
 ```{r graphical-representations}
-fars_data$total_fatalities <- ifelse(fars_data$FATALS > 0, 1, 0)
+# Create total_fatalities based on the fatals column
+fars_data$total_fatalities <- ifelse(fars_data$fatals > 0, 1, 0)
 
 # Histogram of Total Fatalities
 ggplot(fars_data, aes(x=total_fatalities)) +
     geom_histogram(binwidth=1, fill="blue", color="black", alpha=0.7) +
-    labs(title="Histogram of Total Fatalities", x="Total Fatalities", y="Frequency") +
+    labs(title="Histogram of Total Fatalities", x="Total Fatalities (0 = No, 1 = Yes)", y="Frequency") +
     theme_minimal()
 
 # Boxplot of Fatalities by Month
-ggplot(fars_data, aes(x=MONTH, y=total_fatalities)) +
+ggplot(fars_data, aes(x=factor(monthname, levels=month.name), y=fatals)) +  # Convert monthname to a factor
     geom_boxplot(fill="lightgreen") +
     labs(title="Boxplot of Fatalities by Month", x="Month", y="Total Fatalities") +
     theme_minimal()
 ```
 
-
 ## Normality Tests
 
 ```{r normality-tests}
-# Check the structure of the dataset
 str(fars_data)
 
-# Create total_fatalities based on the FATALS column
-fars_data$total_fatalities <- fars_data$FATALS
+fars_data$total_fatalities <- fars_data$fatals 
 
-# Check the number of non-missing values
 non_missing_count <- sum(!is.na(fars_data$total_fatalities))
 cat("Number of non-missing values in total_fatalities:", non_missing_count, "\\n")
 
-# Display unique values and summary of total_fatalities
 unique_values <- unique(fars_data$total_fatalities)
 summary(fars_data$total_fatalities)
 cat("Unique values in total_fatalities:", unique_values, "\\n")
 
-# Run Shapiro-Wilk Normality Test
 if (non_missing_count >= 3 && non_missing_count <= 5000) {
     shapiro_test <- shapiro.test(fars_data$total_fatalities)
     cat("Shapiro-Wilk Normality Test:\\n")
@@ -97,7 +92,6 @@ if (non_missing_count >= 3 && non_missing_count <= 5000) {
     cat("Insufficient sample size for Shapiro-Wilk test.\\n")
 }
 
-# Q-Q Plot for Normality Check
 qqnorm(fars_data$total_fatalities, main="Q-Q Plot for Total Fatalities")
 qqline(fars_data$total_fatalities, col="red")
 ```
@@ -106,9 +100,10 @@ qqline(fars_data$total_fatalities, col="red")
 
 ### Chi-Square Test
 ```{r chi-square-test}
-# Chi-Square Test
-table_states <- table(fars_data$STATENAME)
+table_states <- table(fars_data$statename)
+
 chi_square_test <- chisq.test(table_states)
+
 cat("Chi-Square Test Results:\n")
 print(chi_square_test)
 ```
@@ -120,13 +115,14 @@ print(chi_square_test)
 # Analyzing fatalities by month to identify seasonal patterns
 ```{r}
 monthly_summary <- fars_data %>% 
-  group_by(MONTH) %>% 
-  summarize(total_fatalities = n(), .groups = 'drop')
+  group_by(monthname) %>% 
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop') 
 
-ggplot(monthly_summary, aes(x=MONTH, y=total_fatalities)) +
+monthly_summary$monthname <- factor(monthly_summary$monthname, levels = month.name)
+
+ggplot(monthly_summary, aes(x=monthname, y=total_fatalities)) +
   geom_line(group=1, color="blue", size=1.2) +
   geom_point(color="red", size=3) +
-  scale_x_continuous(breaks=1:12) +  
   labs(title="Trends in Fatal Accidents by Month (2022)",
        x="Month",
        y="Total Fatalities") +
@@ -136,16 +132,21 @@ ggplot(monthly_summary, aes(x=MONTH, y=total_fatalities)) +
 ### Regional Analysis for the year 2022
 
 ```{r, fig.width=14, fig.height=10}
+# Summarizing total fatalities by state and month
 state_monthly_summary <- fars_data %>% 
-  group_by(STATENAME, MONTH) %>% 
-  summarize(total_fatalities = n(), .groups = 'drop')
+  group_by(statename, monthname) %>%  # Ensure correct column names
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop')
 
+# Display the head of the summary
 print(head(state_monthly_summary))
 
-ggplot(state_monthly_summary, aes(x=MONTH, y=total_fatalities, color=STATENAME, group=STATENAME)) +
+# Create a factor for monthname to ensure it is ordered correctly
+state_monthly_summary$monthname <- factor(state_monthly_summary$monthname, levels = month.name)
+
+# Plotting state-wise trends in fatalities by month
+ggplot(state_monthly_summary, aes(x=monthname, y=total_fatalities, color=statename, group=statename)) +
   geom_line(size=1, alpha=0.7) +  
   geom_point(size=2, alpha=0.8) +  
-  scale_x_continuous(breaks=1:12) + 
   scale_y_continuous(breaks = seq(0, max(state_monthly_summary$total_fatalities, na.rm = TRUE), by = 10)) + 
   labs(title="State-wise Trends in Fatal Accidents by Month",
        x="Month",
@@ -156,32 +157,21 @@ ggplot(state_monthly_summary, aes(x=MONTH, y=total_fatalities, color=STATENAME, 
         axis.text.x = element_text(angle = 45, hjust = 1), 
         panel.grid.minor = element_blank()) 
 
-
+# Save the plot as a PNG file
 ggsave("enlarged_state_trends.png", width = 18, height = 12, dpi = 300)
-```
-## 4. Insights and Recommendation
-
-
-# Summarize the monthly and regional trends
-```{r}
-peak_month <- monthly_summary$MONTH[which.max(monthly_summary$total_fatalities)]
-
-cat("Summary of Findings:\n")
-cat("- The month with the highest number of fatal accidents in 2022 was", peak_month, ".\n")
-
 ```
 
 # Identify the region with the highest fatalities in each month
 
 ```{r}
 regional_monthly_summary <- fars_data %>% 
-  group_by(STATENAME, MONTH) %>% 
-  summarize(total_fatalities = n(), .groups = 'drop')
+  group_by(statename, monthname) %>%  
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop')
 
 high_risk_states <- regional_monthly_summary %>% 
-  group_by(MONTH) %>% 
+  group_by(monthname) %>% 
   slice(which.max(total_fatalities)) %>% 
-  select(MONTH, STATENAME, total_fatalities)
+  select(monthname, statename, total_fatalities)
 
 cat("States with the highest number of fatalities for each month:\n")
 print(high_risk_states)
@@ -194,12 +184,16 @@ print(high_risk_states)
 
 ```{r}
 regional_trends <- fars_data %>% 
-  group_by(STATENAME, MONTH) %>% 
-  summarize(total_fatalities = n(), .groups = 'drop')
+  group_by(statename, monthname) %>%
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop')
+
+regional_trends <- regional_trends %>%
+  mutate(month_numeric = match(monthname, month.name)) 
 
 trend_direction <- regional_trends %>%
-  group_by(STATENAME) %>%
-  summarize(trend = cor(MONTH, total_fatalities, use="complete.obs")) %>%
+  group_by(statename) %>%
+  filter(n() > 1) %>% 
+  summarize(trend = cor(month_numeric, total_fatalities, use = "complete.obs")) %>%
   mutate(direction = ifelse(trend > 0, "Increasing", "Decreasing"))
 
 cat("Trend Analysis Summary for Fatalities in 2022:\n")
