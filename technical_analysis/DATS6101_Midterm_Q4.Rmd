@@ -28,7 +28,7 @@ summary(fars_data)
 
 ### Data Preparation
 - **Year Extraction**: If the dataset contains a 'Date' or 'Year' column, ensure proper formatting.
-- **Filtering Relevant Columns**: Focus on columns relevant to year, region, EMS response time, and fatality status.
+- **Filtering Relevant Columns**: Focus on columns relevant to year, region, and fatality status.
 
 ```{r data-preparation}
 if ("DATE" %in% names(fars_data)) {
