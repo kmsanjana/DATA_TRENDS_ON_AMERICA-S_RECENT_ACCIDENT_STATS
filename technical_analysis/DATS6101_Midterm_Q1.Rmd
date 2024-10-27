@@ -16,9 +16,7 @@ library(here)
 ```{r}
 # load the cleaned data frame
 dataset <- read_csv(here("dataset", "cleaned_FARS.csv"))
-colnames(dataset)
 ```
-
 
 # 2. Temporal Analysis (Hour, Day of Week)
 
@@ -27,6 +25,7 @@ Research Question: How do **temporal factors** affect fatal motor vehicle accide
 - SMART question 1: How do **day of week** and **hour of day** affect the occurrence and severity of fatal accidents?
 
 - SMART question 2: Does **day of week** affect the day to day variation on total fatalities per day?
+
 
 ## Data Subsetting and Preparation
 Subset for temporal question
@@ -45,7 +44,6 @@ df_temporal <- df_temporal %>%
     date = as.Date(paste("2022", monthname, day, sep = "-"), format = "%Y-%b-%d"),
     day_type = ifelse(day_weekname %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
    fatal_category = ifelse(fatals > 1, "multiple", "one")) 
-
 
 # convert into factor variable and set up level
 df_temporal$day_weekname <- factor(df_temporal$day_weekname, levels = c("Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
