@@ -249,7 +249,7 @@ colnames(df_wday_contingency)<- c("day_weekname", "fatal_category", "Freq")
 df_wday_contingency %>% ggplot(aes(x= day_weekname, y = Freq, fill = fatal_category))+
   geom_bar(stat="identity", alpha = 0.75) +
   facet_wrap(~ fatal_category, scales = "free_y")+
-  labs(x = "Day of the Week", y = "Frequency", title = "Severity by Day of Week") +
+  labs(x = "Day of the Week", y = "Frequency") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
