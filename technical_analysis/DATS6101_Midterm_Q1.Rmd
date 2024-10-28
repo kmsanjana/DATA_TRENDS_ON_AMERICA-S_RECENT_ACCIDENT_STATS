@@ -10,19 +10,22 @@ library(tidyverse)
 library(dplyr)
 library(car)
 library(PMCMRplus)
+library(here)
 ```
 
 ```{r}
-dataset <- read_csv("/Users/chengyuhan/Documents/GitHub/DATS_6101_TEAM5/dataset/cleaned_FARS.csv")
-colnames(dataset)
+# load the cleaned data frame
+dataset <- read_csv(here("dataset", "cleaned_FARS.csv"))
 ```
 
-
-
 # 2. Temporal Analysis (Hour, Day of Week)
+
 Research Question: How do **temporal factors** affect fatal motor vehicle accidents?
-SMART question 1: How do **day of week** and **hour of day** affect the occurrence and severity of fatal accidents?
-SMART question 2: Does **day of week** affect the day to day variation on total fatalities per day?
+
+- SMART question 1: How do **day of week** and **hour of day** affect the occurrence and severity of fatal accidents?
+
+- SMART question 2: Does **day of week** affect the day to day variation on total fatalities per day?
+
 
 ## Data Subsetting and Preparation
 Subset for temporal question
@@ -42,8 +45,7 @@ df_temporal <- df_temporal %>%
     day_type = ifelse(day_weekname %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
    fatal_category = ifelse(fatals > 1, "multiple", "one")) 
 
-
-# convert into factor variable and set up levl
+# convert into factor variable and set up level
 df_temporal$day_weekname <- factor(df_temporal$day_weekname, levels = c("Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 df_temporal$hour <- factor(df_temporal$hour)
 
@@ -62,6 +64,12 @@ missing_dates <- setdiff(all_dates_2022, accident_dates)
 missing_dates # none: all included
 ```
 
+Frequency Analysis: Day of Week and Weekday vs Weekend
+This section calculates the frequency of occurrences for each day of the week and categorizes the results into weekdays and weekends. 
+
+**Day of Week Analysis**: Sunday to Friday each has frequency of 52 occurrences, while Saturday has 53. The distribution across the days is balanced.
+
+**Weekday vs Weekend Analysis**: Weekdays have a total of 260 counts, and weekends have 105 counts.
 
 ```{r include=FALSE}
 # Calculate for the frequency of day of week in the data frame
@@ -84,8 +92,6 @@ weekday_weekend_counts <- day_of_week_counts %>%
 total_weekday_weekend_counts <- weekday_weekend_counts %>%
   group_by(category) %>%
   summarise(total_count = sum(count))
-total_weekday_weekend_counts
-
 total_weekday_weekend_counts
 
 ```
@@ -123,7 +129,7 @@ df_wday_accidents <- df_temporal %>%
 df_wday_accidents
 ```
 
-Saturday and Sunday appears to have higher count of fatal accidents than rest of days of week.
+Saturday and Sunday appear to have higher count of fatal accidents than rest of days of week.
  
 ### Data Visualization
 #### Hour of Day
@@ -138,7 +144,8 @@ df_hour %>% ggplot(aes(x= hour, fill = as.numeric(as.character(hour)) >= 6 & as.
                     labels = c("Nighttime", "Daytime")) +
   theme_minimal()
 ```
-### Day of Week
+
+#### Day of Week
 ```{r}
 
 df_wday_accidents <- df_wday_accidents %>%
@@ -165,19 +172,37 @@ We use Chi-squared test to determine whether accidents are uniformly distributed
 table(df_hour$hour)
 chisq_result <- chisq.test(table(df_hour$hour))
 chisq_result
+
+# Get observed and expected counts
+observed <- chisq_result$observed
+expected <- chisq_result$expected
+
+# Calculate standardized residuals
+standardized_residuals <- (observed - expected) / sqrt(expected)
+print(standardized_residuals)
 ```
 
 #### Day of Week
+
+In the dataset, six days have 52 occurrences and one has 53. Even though the days are not perfectly equal but the impact will likely be minimal given the small diffference beteen 52 and 53. For simplicity and common assumption, I will be using equal distribution across all seven days in the test. 
+
 ```{r : Statistical Testing}
 # chi-squared test on the occurrence of accident
-df_temporal
 table(df_temporal$day_weekname)
-chisq_result <- chisq.test(table(df_temporal$day_weekname))
-chisq_result
+
+chi_sq_test <- chisq.test(table(df_temporal$day_weekname))
+print(chi_sq_test)
+
+# Get observed and expected counts
+observed <- chi_sq_test$observed
+expected <- chi_sq_test$expected
+
+# Calculate standardized residuals
+standardized_residuals <- (observed - expected) / sqrt(expected)
+print(standardized_residuals)
 ```
 
 P-value for both test are less than 0.05, indicating that there is a statistically significant deviation from a uniform distribution, suggesting that certain hours and days have higher frequencies of accidents compared to others.
-
 
 # 3. Severity Analysis
 Severity is defined as the number of fatalities per accident. Since the majority of accident has one fatality in an accident and limited occurrence on accidents with fatalities more than four, we will group the number of fatalities into *"one"* and *"multiple"* fatalities.
@@ -199,8 +224,6 @@ df_temporal
 wday_contingency <- table(df_temporal$day_weekname, df_temporal$fatal_category)
 wday_contingency
 ```
-
-
 ### Data Visualization
 #### Hour of Day
 ```{r fig.width=12, fig.height=6}
@@ -252,8 +275,8 @@ P-value less than 0.05, we can reject the null hypothesis at 5% level of signifi
 
 #### Day of Week
 ```{r}
-
 chi_sq_test<- chisq.test(wday_contingency)
+print(chi_sq_test)
 
 # Get observed and expected counts
 observed <- chi_sq_test$observed
@@ -265,7 +288,6 @@ print(standardized_residuals)
 ```
 
 The result reveals a clear pattern in the data, highlighting that weekends are associated with more severe accidents involving multiple fatalities. 
-
 
 
 ## Daily Fatalities
