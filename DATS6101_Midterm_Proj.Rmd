@@ -55,7 +55,7 @@ library(shiny)
 
 ```{r, include=T, results='markup',message=TRUE}
 # Loading the dataset
-dataset <- read_csv(here("dataset", "NTAD_Fatality_Analysis_Reporting_System_2022_Accidents.csv"))
+dataset <- read_csv("dataset.csv")
 
 # Now viewing the structure of the dataset
 str(dataset)
@@ -101,12 +101,61 @@ colnames(dataset)
 
 ## Convert variables into correct data types
 ```{r}
+
 # Convert some variables into factor variables
 dataset$rur_urbname <- factor(dataset$rur_urbname)
 dataset$day_weekname <- factor(dataset$day_weekname, levels = c("Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
 dataset$func_sysname <- factor(dataset$func_sysname)
+dataset$lgt_condname <- factor(dataset$lgt_condname)
+dataset$weathername <-factor(dataset$weathername)
+dataset$statename <- factor(dataset$statename)
+
 str(dataset)
 ```
+
+## **Outlier detection and removal**
+```{r, include=T, results='markup',message=TRUE}
+
+columns <- c("ve_total", "peds", "permvit", "arr_min", "hosp_hr")
+
+dataset_long <- dataset %>%
+  select(all_of(columns)) %>%  # Select specified columns
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
+
+# Plotting boxplots to visualize outliers
+ggplot(dataset_long, aes(x = variable, y = value)) +
+  geom_boxplot(outlier.color = "red", outlier.shape = 16, outlier.size = 2) +
+  facet_wrap(~ variable, scales = "free") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Boxplots of Selected Columns to Identify Outliers",
+       x = "Variables",
+       y = "Values")
+
+remove_outliers <- function(df, columns) {
+  df %>% mutate(across(all_of(columns), ~ ifelse(
+    . < (quantile(., 0.25, na.rm = TRUE) - 1.5 * IQR(., na.rm = TRUE)) | 
+    . > (quantile(., 0.75, na.rm = TRUE) + 1.5 * IQR(., na.rm = TRUE)), 
+    NA, .))) %>%
+    drop_na()
+}
+dataset <- remove_outliers(dataset, columns)
+
+# Reshape data to long format for boxplot visualization after removing outliers
+dataset_long <- dataset %>%
+  select(all_of(columns)) %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
+
+# Plotting boxplots to visualize the cleaned data without outliers
+ggplot(dataset_long, aes(x = variable, y = value)) +
+  geom_boxplot(outlier.color = "red", outlier.shape = 16, outlier.size = 2) +
+  facet_wrap(~ variable, scales = "free") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Boxplots of Selected Columns After Outlier Removal",
+       x = "Variables",
+       y = "Values")
+
+```
+
 
 
 ## Saving the new and cleaned dataset...
@@ -121,14 +170,14 @@ road_data <- dataset %>%
   drop_na() %>%
   filter(!rur_urbname %in% c("Unknown", "Not Reported", "Trafficway Not in State Inventory")) %>%
   mutate(
-    rur_urbname = factor(rur_urbname, labels = c("Rural", "Urban")),
+    rur_urbname = factor(rur_urbname, labels = c("Rural", "Urban"))
   )
 ```
 
 ## Overview of Analysis
 - Time Analysis (month, day of week, hour of day)
 - Environmental Analysis(Weather/Lighting)
-- Location Analysis
+- Infrastructure Analysis
 
 # 2. Temporal Analysis (Hour, Day of Week)
 
@@ -930,7 +979,7 @@ print(t_test_result)
 #### Hence it is important to underastand that, in addition to weather and lighting conditions, there are several other critical factors like road infrastructure, juction types and driver behaviour which can equally influence the likelihood and severity of accidents. Addressing these factors can provide a more holistic approach to improving road safety and reducing fatalities.
 
 
-# 4. Location Analysis
+# 4. Infrastructure Analysis
 
 **Research Question 3: How do road conditions (urban/rural, road type, and traffic controls) impact the severity of crashes?** 
 
@@ -1217,6 +1266,7 @@ ggplot(dataset, aes(x=factor(monthname, levels=month.name), y=fatals)) +  # Conv
     labs(title="Boxplot of Fatalities by Month", x="Month", y="Total Fatalities") +
     theme_minimal()
 ```
+
 ### It shows that there are significant fluctuations in fatality counts throughout the year, with certain months like Jan, March, July indicating higher median fatalities compared to others. 
 
 ### Normality Test
