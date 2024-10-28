@@ -29,17 +29,15 @@ options(scientific=T, digits = 3)
 
 # ***Dead Ends and Data Trends: A Journey Through America's Recent Accident Stats***
 
-### An insightful journey into understanding the patterns behind road fatalities in the U.S. and creating actionable insights for a safer future.
+An insightful journey into understanding the patterns behind road fatalities in the U.S. and creating actionable insights for a safer future.
 
 
 # ***Project Overview***
 
-### Motor vehicle accidents are a leading cause of unintentional injury-related deaths in the U.S.  Using the 2022 FARS dataset, our analysis focuses on revealing trends and risk factors that contribute to fatal crashes.
+Motor vehicle accidents are a leading cause of unintentional injury-related deaths in the U.S.  Using the 2022 FARS dataset, our analysis focuses on revealing trends and risk factors that contribute to fatal crashes.
 
 
-### Our first step is getting ready by loading the necessary packages and the data. 
-
-
+Our first step is getting ready by loading the necessary packages and the data. 
 ```{r, include=T, results='asis',message=TRUE}
 # Loading the necessary libraries
 library(readr)
@@ -511,26 +509,6 @@ print(posthoc_result)
 ```
 
 p-values <0.05, there is a statistically significant difference (p-value < 0.05) in the number of daily fatalities across different days of the week. This indicates that day of week can affect daily fatality counts.
-
-#Checking if the no.of fatalities have been decreasing or increasing over the months in different regions
-
-```{r}
-regional_trends <- fars_data %>% 
-  group_by(statename, monthname) %>%
-  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop')
-
-regional_trends <- regional_trends %>%
-  mutate(month_numeric = match(monthname, month.name)) 
-
-trend_direction <- regional_trends %>%
-  group_by(statename) %>%
-  filter(n() > 1) %>% 
-  summarize(trend = cor(month_numeric, total_fatalities, use = "complete.obs")) %>%
-  mutate(direction = ifelse(trend > 0, "Increasing", "Decreasing"))
-
-cat("Trend Analysis Summary for Fatalities in 2022:\n")
-print(trend_direction)
-```
 
 
 ## 2. Environmental Analysis 
