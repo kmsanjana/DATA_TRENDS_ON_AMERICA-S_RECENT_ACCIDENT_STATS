@@ -1544,7 +1544,13 @@ summary(anova_result)
 
 TukeyHSD(anova_result)
 ```
+### **ANOVA Results**: The ANOVA summary indicates that the F-value is 1.01 with a corresponding p-value of 0.39. Since the p-value exceeds the common alpha level of 0.05, we fail to reject the null hypothesis, concluding that there is no statistically significant difference in EMS arrival times across the different severity levels.
 
+### The mean arrival time difference between "Medium (2-3 Fatalities)" and "Low (1 Fatality)" is -0.144, with a confidence interval ranging from -1.11 to 0.821, indicating that the differences are not significant.
+
+### Larger differences are observed when comparing "Very High (6+ Fatalities)" with "Low (1 Fatality)" at -7.659, with a confidence interval from -24.06 to 8.745, again demonstrating no significant difference given the p-value of 0.627.
+
+### ANOVA analysis and subsequent Tukey post-hoc tests reveal that there are no statistically significant differences in EMS arrival times across the various severity levels of fatalities.
 
 ### Logistic Regression Analysis
 
