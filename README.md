@@ -17,7 +17,7 @@ Our research seeks to answer critical questions that can inform decision-makers 
 
 1. **Temporal Factors**: When are fatal accidents most likely to occur? Is there a "dangerous hour" or a "high-risk season"?
 2. **Environmental Conditions**: How do weather, lighting, and visibility impact the severity of accidents?
-3. **Road & Traffic Control Conditions**: What role do road types, conditions, and traffic controls play in determining accident outcomes?
+3. **Road & Traffic Control Conditions- Infrastructure**: What role do road types, conditions, and traffic controls play in determining accident outcomes?
 4. **Trends Over Time**: Are fatal accidents becoming more or less frequent over the years in certain regions or states?
 5. **Emergency Response (EMS)**: Does the speed of emergency response correlate with the likelihood of survival after an accident?
 
@@ -31,7 +31,7 @@ The backbone of our study lies in answering the following SMART questions:
 1. **How do temporal factors (time of day, day of the week, month) influence the frequency and severity of fatal accidents?**
 2. **What is the relationship between weather and lighting conditions and the occurrence of fatal accidents?**
 3. **How do road conditions (urban vs. rural, road type, and traffic controls) impact the severity of crashes?**
-4. **Are there discernible trends in fatal accidents across different years? Has there been an increase or decrease in fatalities in certain regions?**
+4. **Are there discernible trends in fatal accidents over time? Has there been an increase or decrease in fatalities in certain regions?**
 5. **How does EMS arrival time influence the outcome of fatal crashes, and are quicker response times linked to lower fatality rates?**
 
 This analysis will be helpful for policymakers, city planners, and road safety organizations to drive impactful changes.
