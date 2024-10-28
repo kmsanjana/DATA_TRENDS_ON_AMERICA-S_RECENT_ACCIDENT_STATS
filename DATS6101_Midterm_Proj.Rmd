@@ -1152,3 +1152,187 @@ server <- function(input, output){
 
 shinyApp(ui = ui, server = server)
 ```
+
+### **Are there any noticeable trends in fatal accidents over the years?**
+
+## Graphical Representations
+
+### In this section, we present visualizations to better understand the relationship between EMS arrival times and the number of fatalities. 
+
+### We start with a histogram of total fatalities, which provides insight into the frequency of fatal accidents across the dataset. 
+
+### Next, we include a boxplot illustrating the distribution of fatalities by month. By converting the `monthname` into a factor with a defined order, we ensure that the boxplot accurately reflects the seasonal variations in fatalities. This visualization highlights any monthly patterns or trends in fatal accidents, allowing for a clearer understanding of when fatalities are most likely to occur throughout the year.
+
+```{r graphical-representations}
+# Create total_fatalities based on the fatals column
+dataset$total_fatalities <- ifelse(dataset$fatals > 0, 1, 0)
+
+# Histogram of Total Fatalities
+ggplot(dataset, aes(x=total_fatalities)) +
+    geom_histogram(binwidth=1, fill="blue", color="black", alpha=0.7) +
+    labs(title="Histogram of Total Fatalities", x="Total Fatalities (0 = No, 1 = Yes)", y="Frequency") +
+    theme_minimal()
+
+# Boxplot of Fatalities by Month
+ggplot(dataset, aes(x=factor(monthname, levels=month.name), y=fatals)) +  # Convert monthname to a factor
+    geom_boxplot(fill="lightgreen") +
+    labs(title="Boxplot of Fatalities by Month", x="Month", y="Total Fatalities") +
+    theme_minimal()
+```
+### It shows that there are significant fluctuations in fatality counts throughout the year, with certain months like Jan, March, July indicating higher median fatalities compared to others. 
+
+### Normality Test
+
+### In this section, we evaluate the distribution of the total fatalities to determine if it follows a normal distribution. First, we summarize the `total_fatalities` variable, which aggregates the fatalities from the dataset. We then perform the Shapiro-Wilk normality test to assess whether the data is normally distributed. A Q-Q plot is also generated to visually inspect the normality of the data distribution, helping us understand the underlying characteristics of the fatalities.
+
+```{r normality-tests}
+str(dataset)
+
+dataset$total_fatalities <- dataset$fatals 
+
+non_missing_count <- sum(!is.na(dataset$total_fatalities))
+cat("Number of non-missing values in total_fatalities:", non_missing_count, "\\n")
+
+unique_values <- unique(dataset$total_fatalities)
+summary(dataset$total_fatalities)
+cat("Unique values in total_fatalities:", unique_values, "\\n")
+
+if (non_missing_count >= 3 && non_missing_count <= 5000) {
+    shapiro_test <- shapiro.test(dataset$total_fatalities)
+    cat("Shapiro-Wilk Normality Test:\\n")
+    print(shapiro_test)
+} else {
+    cat("Insufficient sample size for Shapiro-Wilk test.\\n")
+}
+
+qqnorm(dataset$total_fatalities, main="Q-Q Plot for Total Fatalities")
+qqline(dataset$total_fatalities, col="red")
+```
+###The Q-Q plot displays the quantiles of the sample data (total fatalities) against the quantiles of a theoretical normal distribution. If the data points closely follow the red line, it indicates that the data is normally distributed.
+
+## Statistical Test
+
+### Chi-Square Test
+```{r chi-square-test}
+table_states <- table(dataset$statename)
+
+chi_square_test <- chisq.test(table_states)
+
+cat("Chi-Square Test Results:\n")
+print(chi_square_test)
+```
+
+### The Chi-Square test results indicate a significant association between the categorical variable and the observed fatalities, with a Chi-squared statistic of 52686 and a p-value of less than 2e-16. This strong evidence against the null hypothesis suggests that fatalities are not uniformly distributed across the categories analyzed, which would require further analysis.
+
+## Monthly trends for 2022
+
+# Analyzing fatalities by month to identify seasonal patterns
+```{r}
+monthly_summary <- dataset %>% 
+  group_by(monthname) %>% 
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop') 
+
+monthly_summary$monthname <- factor(monthly_summary$monthname, levels = month.name)
+
+ggplot(monthly_summary, aes(x=monthname, y=total_fatalities)) +
+  geom_line(group=1, color="blue", size=1.2) +
+  geom_point(color="red", size=3) +
+  labs(title="Trends in Fatal Accidents by Month (2022)",
+       x="Month",
+       y="Total Fatalities") +
+  theme_minimal()
+```
+
+### The line graph illustrates the monthly trends in fatal accidents for the year 2022. The data reveals fluctuations in the total number of fatalities, with the highest peak in October, suggesting that this month experienced a higher incidence of fatal accidents compared to others. Conversely, February shows the lowest total fatalities, indicating a potential seasonal variation in accident frequency. The overall upward trend in the latter half of the year indicates that fatalities may increase during certain months, which could be influenced by various factors such as weather conditions, holiday traffic, or enforcement of traffic laws.
+
+
+### Regional Analysis for the year 2022
+
+```{r, fig.width=14, fig.height=10}
+# Summarizing total fatalities by state and month
+state_monthly_summary <- dataset %>% 
+  group_by(statename, monthname) %>%  # Ensure correct column names
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop')
+
+# Display the head of the summary
+print(head(state_monthly_summary))
+
+# Create a factor for monthname to ensure it is ordered correctly
+state_monthly_summary$monthname <- factor(state_monthly_summary$monthname, levels = month.name)
+
+# Plotting state-wise trends in fatalities by month
+ggplot(state_monthly_summary, aes(x=monthname, y=total_fatalities, color=statename, group=statename)) +
+  geom_line(size=1, alpha=0.7) +  
+  geom_point(size=2, alpha=0.8) +  
+  scale_y_continuous(breaks = seq(0, max(state_monthly_summary$total_fatalities, na.rm = TRUE), by = 10)) + 
+  labs(title="State-wise Trends in Fatal Accidents by Month",
+       x="Month",
+       y="Total Fatalities",
+       color="State") +
+  theme_minimal() +
+  theme(legend.position = "bottom", 
+        axis.text.x = element_text(angle = 45, hjust = 1), 
+        panel.grid.minor = element_blank()) 
+
+# Save the plot as a PNG file
+ggsave("enlarged_state_trends.png", width = 18, height = 12, dpi = 300)
+```
+
+### The line graph illustrates the monthly trends in fatal accidents across various states in 2022. Each line represents a different state, allowing for a comparative analysis of how fatalities fluctuate throughout the year.
+
+### **Trends and Variations**: The graph shows significant variability among states in the number of fatal accidents. For instance, states like Texas and California may show higher fatalities during summer months, while others may experience peaks during different times of the year.
+
+### **Seasonal Patterns**: Some states exhibit clear seasonal patterns, with increases in fatalities during certain months, possibly due to factors like weather conditions, travel patterns, or seasonal activities that affect road usage.
+
+### **Comparative Insights**: This visualization allows stakeholders to identify which states have persistently high fatalities and to examine the effectiveness of traffic safety measures. States with rising trends may need targeted interventions to reduce accidents.
+
+
+
+### Identify the region with the highest fatalities in each month
+
+```{r}
+regional_monthly_summary <- dataset %>% 
+  group_by(statename, monthname) %>%  
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop')
+
+high_risk_states <- regional_monthly_summary %>% 
+  group_by(monthname) %>% 
+  slice(which.max(total_fatalities)) %>% 
+  select(monthname, statename, total_fatalities)
+
+cat("States with the highest number of fatalities for each month:\n")
+print(high_risk_states)
+```
+### **Highest Fatalities**: December shows the highest total fatalities in Texas (414), suggesting that winter holidays may contribute to increased road usage and accidents. Similarly, California has notably high fatalities in October (406) and August (404), indicating potential summer travel spikes and events that may influence accident rates.
+
+### **Comparative Trends**: California consistently reports high fatalities across several months (April, February, March), highlighting a potential trend of elevated risk for road accidents in this state. Conversely, Texas shows a fluctuating pattern, with high fatalities in both winter (January, December) and summer (July, May).
+
+### This analysis underscores the need for targeted traffic safety interventions, particularly during months identified with high fatality counts.
+
+#Checking if the no.of fatalities have been decreasing or increasing over the months in different regions
+
+
+```{r}
+regional_trends <- dataset %>% 
+  group_by(statename, monthname) %>%
+  summarize(total_fatalities = sum(fatals, na.rm = TRUE), .groups = 'drop')
+
+regional_trends <- regional_trends %>%
+  mutate(month_numeric = match(monthname, month.name)) 
+
+trend_direction <- regional_trends %>%
+  group_by(statename) %>%
+  filter(n() > 1) %>% 
+  summarize(trend = cor(month_numeric, total_fatalities, use = "complete.obs")) %>%
+  mutate(direction = ifelse(trend > 0, "Increasing", "Decreasing"))
+
+cat("Trend Analysis Summary for Fatalities in 2022:\n")
+print(trend_direction)
+```
+
+
+### **General Increase**: A majority of states (e.g., Alabama, Alaska, Arizona) show a positive growth rate in fatalities, suggesting a concerning upward trend in traffic-related deaths.
+
+### **States with Decreasing Trends**: Notably, a few states, such as the District of Columbia, Florida, Hawaii, and Nebraska, exhibit a decrease in fatalities. Florida and Hawaii decreases by −0.2377 and −0.3483, respectively.
+
+### **High Variability in Change Rates**: Some states, like Missouri (0.6856) and Pennsylvania (0.6936), have particularly high increasing rates. Conversely, there are states with a slight increase, such as Georgia (0.1040).
