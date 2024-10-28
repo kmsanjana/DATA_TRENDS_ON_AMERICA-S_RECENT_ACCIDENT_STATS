@@ -17,7 +17,7 @@ Our research seeks to answer critical questions that can inform decision-makers 
 
 1. **Temporal Factors**: When are fatal accidents most likely to occur? Is there a "dangerous hour" or a "high-risk season"?
 2. **Environmental Conditions**: How do weather, lighting, and visibility impact the severity of accidents?
-3. **Road & Traffic Control Conditions**: What role do road types, conditions, and traffic controls play in determining accident outcomes?
+3. **Road & Traffic Control Conditions- Infrastructure**: What role do road types, conditions, and traffic controls play in determining accident outcomes?
 4. **Trends Over Time**: Are fatal accidents becoming more or less frequent over the years in certain regions or states?
 5. **Emergency Response (EMS)**: Does the speed of emergency response correlate with the likelihood of survival after an accident?
 
