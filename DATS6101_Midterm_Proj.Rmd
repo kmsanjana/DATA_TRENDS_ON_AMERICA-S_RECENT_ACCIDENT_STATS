@@ -1583,3 +1583,15 @@ if (correlation_severity$p.value < 0.05) {
   cat("- There is no significant relationship between EMS arrival time and the severity of accidents.\n")
 }
 ```
+
+
+#### Key Findings:
+Fatal accidents are more frequent between 6 pm and 10 pm and on weekends, with late-night hours linked to increased severity
+Clear weather conditions see the highest fatalities, while poorly lit roads (“Dark - Not Lighted”) have elevated risks.
+Highways and major arterials report the most fatalities, likely influenced by higher speeds and traffic volume.
+EMS response time did not significantly affect fatality severity, suggesting a greater need for preventive measures over emergency response.
+Limitation
+Solely focus on accident file, excluding critical behavioral aspects like impaired driving or motorist fatigue
+Further considerations: Cross Factor Analysis
+To gain more comprehensive understanding, further analysis should integrate these factors, examining the interactive effect on fatal accidents
+investigate the underlying explanation for our analysis result
