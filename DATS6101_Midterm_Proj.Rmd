@@ -1425,7 +1425,7 @@ print(trend_direction)
 
 ```{r data-preparation}
 # Calculate EMS arrival time in minutes using only the minute column
-dataset$ems_arrival_time <- as.numeric(dataset$minute)
+dataset$ems_arrival_time <- as.numeric(dataset$arr_min)
 
 # Check if FATALS column exists and convert it to numeric
 if ("fatals" %in% colnames(dataset)) {
