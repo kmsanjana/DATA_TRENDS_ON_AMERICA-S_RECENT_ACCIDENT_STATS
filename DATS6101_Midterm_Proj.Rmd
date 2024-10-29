@@ -1285,7 +1285,7 @@ if (non_missing_count >= 3 && non_missing_count <= 5000) {
 qqnorm(dataset$total_fatalities, main="Q-Q Plot for Total Fatalities")
 qqline(dataset$total_fatalities, col="red")
 ```
-###The Q-Q plot displays the quantiles of the sample data (total fatalities) against the quantiles of a theoretical normal distribution. If the data points closely follow the red line, it indicates that the data is normally distributed.
+### The Q-Q plot displays the quantiles of the sample data (total fatalities) against the quantiles of a theoretical normal distribution. If the data points closely follow the red line, it indicates that the data is normally distributed.
 
 ## Statistical Test
 
@@ -1386,7 +1386,7 @@ print(high_risk_states)
 
 ### This analysis underscores the need for targeted traffic safety interventions, particularly during months identified with high fatality counts.
 
-#Checking if the no.of fatalities have been decreasing or increasing over the months in different regions
+# Checking if the no.of fatalities have been decreasing or increasing over the months in different regions
 
 
 ```{r}
