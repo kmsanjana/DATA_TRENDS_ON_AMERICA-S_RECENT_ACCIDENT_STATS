@@ -55,6 +55,7 @@ library(shiny)
 
 ```{r, include=T, results='markup',message=TRUE}
 # Loading the dataset
+
 dataset <- read_csv("dataset.csv")
 
 # Now viewing the structure of the dataset
@@ -310,6 +311,7 @@ df_hour %>% ggplot(aes(x= hour, fill = time_of_day)) +
 
 ```
 
+Given the patterns in hour of day, we will categorize day into two time group: Early morning, morning, afternoon, and evening.
 
 #### Day of Week
 ```{r}
@@ -402,21 +404,15 @@ colnames(df_hr_contingency)<- c("time_of_day", "fatal_category", "Freq")
 df_hr_contingency
 
 #data viz
-df_hr_contingency %>% 
-  ggplot(aes(x= time_of_day, y = Freq/sum(Freq), fill = fatal_category))+
-  geom_bar(stat="identity", alpha = 0.75) +
-  facet_wrap(~ fatal_category)+
-  labs(y = "Frequency")
-
 grouped_hr_contingency <- df_hr_contingency %>%
-  group_by(fatal_category) %>%
+  group_by(time_of_day) %>%
   mutate(proportion = Freq / sum(Freq))
 grouped_hr_contingency
 
 grouped_hr_contingency %>% 
   ggplot(aes(x= time_of_day, y=proportion, fill = fatal_category))+
   geom_bar(stat="identity", alpha = 0.75) +
-  facet_wrap(~ fatal_category)
+  facet_wrap(~ fatal_category,scales = "free_y")
 ```
 
 #### Day of Week
@@ -427,22 +423,22 @@ colnames(df_wday_contingency)<- c("day_weekname", "fatal_category", "Freq")
 
 # data visualization on Severity by day of week
 # Frequency Counts
-df_wday_contingency %>% ggplot(aes(x= day_weekname, y = Freq, fill = fatal_category))+
-  geom_bar(stat="identity", alpha = 0.75) +
-  facet_wrap(~ fatal_category)+
-  labs(x = "Day of the Week", y = "Frequency") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+#df_wday_contingency %>% ggplot(aes(x= day_weekname, y = Freq, fill = fatal_category))+
+#  geom_bar(stat="identity", alpha = 0.75) +
+#  facet_wrap(~ fatal_category)+
+#  labs(x = "Day of the Week", y = "Frequency") +
+#  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Proportion 
 grouped_wday_contingency <- df_wday_contingency %>%
-  group_by(fatal_category) %>%
+  group_by(day_weekname) %>%
   mutate(proportion = Freq / sum(Freq))
 grouped_wday_contingency
 
 grouped_wday_contingency %>% 
   ggplot(aes(x= day_weekname, y=proportion, fill = fatal_category))+
   geom_bar(stat="identity", alpha = 0.75) +
-  facet_wrap(~ fatal_category) +
+  facet_wrap(~ fatal_category,  scales = "free_y") +
     labs(x = "Day of the Week", y = "Proportion") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
