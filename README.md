@@ -15,7 +15,7 @@ Through our journey, we aim to expose patterns within **temporal**, **environmen
 ## 🔍 **Research Focus**
 Our research seeks to answer critical questions that can inform decision-makers about improving road safety. The following are key areas of exploration:
 
-1. **Temporal Factors**: When are fatal accidents most likely to occur? Is there a "rush hour risk" or a "the weeekend effect"?
+1. **Temporal Factors**: When are fatal accidents most likely to occur? Is there a "rush hour risk" or a "the weekend effect"?
 2. **Environmental Conditions**: How do weather, lighting, and visibility impact the severity of accidents?
 3. **Road & Traffic Control Conditions- Infrastructure**: What role do road types, conditions, and traffic controls play in determining accident outcomes?
 4. **Trends Over Time**: Are fatal accidents becoming more or less frequent over the months in certain regions or states?
