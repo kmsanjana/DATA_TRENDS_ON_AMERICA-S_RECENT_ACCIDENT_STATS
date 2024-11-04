@@ -507,6 +507,13 @@ The dataset's limitations, such as its focus only on 2022 fatal accidents and th
 ## 
 
 # References
+
+Farmer, C. M., & Williams, A. F. (2005). *Temporal factors in motor vehicle crash deaths*. *Injury Prevention, 11*(1), 18–23. https://doi.org/10.1136/ip.2004.005439
+
+National Highway Traffic Safety Administration. (2024). *Overview of Motor Vehicle Traffic Crashes in 2022*.
+
+Weast, R. (2018). *Temporal factors in motor-vehicle crash deaths: Ten years later*. *Journal of Safety Research, 65*, 125–131. https://doi.org/10.1016/j.jsr.2018.02.011
+
 # Appendix
 ## Appendix A: Statistical Test Results
 ### A.1 Chi-squared Goodness of Fit Test Results
