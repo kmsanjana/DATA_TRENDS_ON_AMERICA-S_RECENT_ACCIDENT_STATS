@@ -9,7 +9,11 @@
 .Ruserdata
 .Rproj.user/
 
-
+*.html
+*.pdf
+*.docx
+*.knit.md
+*.utf8.md
 
 .Rproj.user/
 *.Rproj
@@ -23,3 +27,5 @@ cache/
 .DS_Store
 
 
+enlarged_state_trends.png
+.DS_Store
