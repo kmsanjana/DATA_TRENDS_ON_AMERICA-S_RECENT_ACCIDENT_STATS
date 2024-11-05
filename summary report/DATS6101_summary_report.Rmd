@@ -485,11 +485,70 @@ For other lighting conditions, the lack of significant differences suggests that
 
 #### 1. chi-square test on the effect of road types
 
+### 4. Analysis of Trends in Fatal Accidents
 
+This section addresses the research question: Are there noticeable trends in fatal accidents throughout the year 2022, and has the number of fatalities increased or decreased in certain regions?
 
+This report examines trends in fatal accidents across the United States using data from the 2022 Fatality Analysis Reporting System (FARS). The goal is to identify notable temporal and regional patterns in fatal accidents, as well as to uncover key contributing factors to these tragic events. By exploring patterns across time, environment, and location, we aim to provide actionable insights for policymakers and public safety officials seeking to mitigate fatalities on U.S. roads.
 
+### 4.1 Monthly Fatality Trends
 
+The analysis began with an exploration of fatalities by month to understand if there were any seasonal or monthly variations. The data reveals that certain months, particularly the summer months of July and August, experience higher rates of fatal accidents. 
+This increase could be attributed to higher travel volumes during summer vacations, warmer weather encouraging more road travel, or potential lapses in driver vigilance during extended holiday periods. A boxplot visualizing fatalities by month underscores this seasonal trend, showing a clear uptick in the number of fatalities during these months.
 
+### 4.2 Geographic Patterns of Fatalities
+
+A state-level analysis of fatalities uncovers significant regional disparities in fatal accident rates. Highly populated states such as Texas, Florida, and California register the highest number of fatalities, a trend that could correlate with larger population densities, extensive road networks, and heavier traffic flows in urban areas. The visualization of fatalities by state highlights these areas as high-risk regions for fatal accidents, suggesting a need for region-specific interventions to address the unique challenges posed by high traffic volumes and urban congestion.
+
+Further, comparisons reveals that fatal accidents in rural areas tend to be more severe. Rural roads may contribute to higher accident severity due to factors such as increased driving speeds, fewer road safety features, and delayed emergency response times. Rural fatalities are likely compounded by limited healthcare access and distance from emergency medical services, suggesting that improving rural infrastructure, such as lighting and emergency services, could help reduce the severity of accidents in these areas.
+
+### 4.3 Statistical Analysis and Hypothesis Testing
+
+To statistically validate these observed trends, an Analysis of Variance (ANOVA) test was conducted on monthly fatalities. The ANOVA results indicate significant differences in the mean number of fatalities across months, supporting the hypothesis of seasonal variation in fatal accidents. In particular, the months of July and August stand out as periods with notably high fatalities, reinforcing the idea that summer months are high-risk periods. Similarly, an ANOVA test examining regional variations in fatalities confirms that certain states have significantly higher fatality rates, underscoring the need for state-targeted road safety campaigns and policy measures.
+
+### 4.4 Recommendations
+
+The findings from this report suggest several policy directions to help mitigate fatal accidents. First, a focus on seasonal awareness campaigns could prove beneficial. For instance, promoting driver safety and awareness in the months leading up to and during high-risk periods such as summer and major holiday seasons could help reduce accident rates. Additionally, the results point to the importance of improving rural infrastructure, particularly in high-fatality states. Enhanced road lighting, signage, and faster emergency response capabilities in rural areas could address some of the most critical factors leading to severe accidents outside of urban centers.
+
+Further, state-specific road safety measures could play a crucial role in addressing the unique road safety challenges in densely populated areas. For example, implementing stricter speed limits, increasing enforcement of traffic regulations, and enhancing road safety features in high-risk states like Texas and Florida may lead to a reduction in fatal accidents.
+
+### 4.5 Limitations and Future Research for this question.
+
+While this report provides valuable insights into 2022 fatal accident trends, the analysis is limited to a single year of data, preventing any long-term trend analysis. Expanding future research to include multi-year data would enable a more comprehensive understanding of changes over time and allow for a deeper exploration of the impact of policy measures. Additionally, incorporating behavioral data, such as driver impairment or fatigue, could further clarify the underlying causes of fatal accidents and enhance targeted interventions.
+
+In conclusion, this analysis underscores the importance of seasonal, regional, and rural-specific interventions to reduce fatal accidents across the United States. By targeting high-risk times and locations with strategic policy initiatives, public safety officials can take significant steps toward safer roadways and a reduction in fatalities nationwide.
+
+### 5. Influence of EMS Arrival Time on Fatality Severity
+
+How does the EMS arrival time influence the severity of fatal outcomes?
+This question focuses on examining how the response time of Emergency Medical Services (EMS) correlates with the severity of fatal accidents. Using the Fatality Analysis Reporting System (FARS) dataset for 2022, the analysis aims to understand whether faster EMS arrival times result in lower fatality severity. The severity of accidents is categorized based on the number of fatalities, and the relationship between EMS arrival time and these severity levels is explored through descriptive statistics, data visualization, and statistical testing.
+
+### 5.1 Descriptive Analysis
+
+Initial descriptive statistics reveal variability in EMS arrival times across different accident severity levels. The average arrival time was generally lower for accidents with fewer fatalities, suggesting that quicker responses might correlate with reduced severity. Further, accidents with "Very High" severity (6+ fatalities) showed a higher average EMS arrival time, indicating that delays in response could be associated with more severe outcomes. This trend warrants a deeper look through visualization and statistical analysis.
+
+### 5.2 Visual Analysis
+
+To visualize the relationship between EMS arrival time and accident severity, box plots and scatter plots were generated. Box plots of EMS arrival times across severity levels illustrate that higher-severity accidents often experience longer EMS response times. Scatter plots further display a positive trend between EMS arrival times and the number of fatalities, with severity levels clearly delineated. These visualizations suggest that delays in EMS response might exacerbate the fatality count, especially in severe accidents.
+
+### 5.3 Statistical Analysis
+
+To quantify the relationship between EMS response times and fatality severity, an Analysis of Variance (ANOVA) test was conducted. The ANOVA results indicated significant differences in EMS arrival times across severity levels, reinforcing the visual trends observed. The findings imply that, on average, longer EMS response times are associated with higher fatality counts. This relationship was further supported by a post-hoc Tukey test, which identified significant differences in EMS arrival times between lower and higher severity categories.
+
+### 5.4 Policy Implications
+
+The analysis suggests that EMS arrival time is a critical factor influencing fatality severity in road accidents. Higher severity levels tend to correlate with longer EMS response times, emphasizing the potential life-saving impact of quicker emergency response. Based on these findings, policy recommendations include:
+
+Investment in EMS Resources: Increasing the availability of EMS units in high-risk areas could reduce response times and potentially lower fatality counts.
+
+Enhanced EMS Infrastructure in Rural Areas: The data suggests that rural accidents often experience longer response times. Improving infrastructure to support faster EMS access in these areas may mitigate severe outcomes.
+
+Technology Integration: Implementing real-time traffic management and accident alert systems could enable EMS to navigate to accident sites more efficiently, reducing response times.
+
+### 5.5 Limitations and Future Directions
+
+This study is limited to 2022 data, restricting the ability to observe long-term trends. Future research should incorporate multiple years of data to evaluate whether improvements in EMS response times correlate with reduced fatality severity over time. Additionally, investigating other factors such as weather conditions and road types may further clarify the nuances of EMS impact on accident outcomes.
+ ​​
 
 # Conclusion
 
