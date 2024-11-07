@@ -109,7 +109,7 @@ dataset$statename <- factor(dataset$statename)
 str(dataset)
 ```
 
-## **Outlier detection and removal**
+## **Outlier detection**
 ```{r, include=T, results='markup',message=TRUE}
 
 columns <- c("ve_total", "peds", "permvit", "arr_min", "hosp_hr")
