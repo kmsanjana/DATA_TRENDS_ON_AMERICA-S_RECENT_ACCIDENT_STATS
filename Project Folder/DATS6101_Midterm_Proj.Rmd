@@ -109,7 +109,7 @@ dataset$statename <- factor(dataset$statename)
 str(dataset)
 ```
 
-## **Outlier detection and removal**
+## **Outlier detection**
 ```{r, include=T, results='markup',message=TRUE}
 
 columns <- c("ve_total", "peds", "permvit", "arr_min", "hosp_hr")
@@ -126,32 +126,6 @@ ggplot(dataset_long, aes(x = variable, y = value)) +
   labs(title = "Boxplots of Selected Columns to Identify Outliers",
        x = "Variables",
        y = "Values")
-
-remove_outliers <- function(df, columns) {
-  df %>% mutate(across(all_of(columns), ~ ifelse(
-    . < (quantile(., 0.25, na.rm = TRUE) - 1.5 * IQR(., na.rm = TRUE)) | 
-    . > (quantile(., 0.75, na.rm = TRUE) + 1.5 * IQR(., na.rm = TRUE)), 
-    NA, .))) %>%
-    drop_na()
-}
-dataset <- remove_outliers(dataset, columns)
-
-# Reshape data to long format for boxplot visualization after removing outliers
-dataset_long <- dataset %>%
-  select(all_of(columns)) %>%
-  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
-
-# Plotting boxplots to visualize the cleaned data without outliers
-ggplot(dataset_long, aes(x = variable, y = value)) +
-  geom_boxplot(outlier.color = "red", outlier.shape = 16, outlier.size = 2) +
-  facet_wrap(~ variable, scales = "free") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(title = "Boxplots of Selected Columns After Outlier Removal",
-       x = "Variables",
-       y = "Values")
-
-```
-
 
 
 #```{r, include=T, results='markup',message=TRUE}
